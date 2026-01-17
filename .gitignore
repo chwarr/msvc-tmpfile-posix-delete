@@ -1,0 +1,28 @@
+# Emacs
+*~
+\#*\#
+
+# Vim
+*.swp
+*.swo
+*.swm
+
+# VS
+/.vs/
+/.vscode/
+
+# CMake build dir
+
+/build/
+
+# Build and test artifacts
+/bin/
+/obj/
+/out/
+/TestResults/
+/tools/
+/Debug/
+/Release/
+
+# MSBuild binary log
+msbuild.binlog
