@@ -64,9 +64,10 @@ static TmpFilePaths CreateTmpFileWithPosixDelete(bool shouldPosixDelete)
     // file will be left around. This is a very small window, however.
     if (shouldPosixDelete)
     {
-        // To successfuly perform a POSIX delete on the file, we need to set
-        // FILE_DISPOSITION_DELETE | FILE_DISPOSITION_POSIX_SEMANTICS on the
-        // NT "file object" and then close all handles to the file object.
+        // To successfully perform a POSIX delete on the file, we need to
+        // set FILE_DISPOSITION_DELETE | FILE_DISPOSITION_POSIX_SEMANTICS on
+        // the NT "file object" and then close all handles to the file
+        // object.
         //
         // Use ReOpenFile to get another file object for the temp file.
         // Using tempFileHandle or DuplicateHandle(..., tempFileHandle, ...)

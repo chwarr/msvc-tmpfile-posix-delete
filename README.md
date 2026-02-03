@@ -7,17 +7,17 @@ session 0 processes.
 It achieves this by performing a "POSIX deletion" on the tmpfile before
 using it.
 
-Normally, files created by `tmpfile` are created with
-`FILE_FLAG_DELETE_ON_CLOSE`, which causes the OS to automatically delete the
-file when all handles to it are closed. If you call `fclose()` on the
-`FILE*` returned by `tmpfile()`, the file will be deleted. If you forget to
-call `fclose()`, the kernel will close all the handles during process
-termination, and the file will still be deleted.
+Files created by `tmpfile` are created with `FILE_FLAG_DELETE_ON_CLOSE`,
+which causes the OS to automatically delete the file when all handles to it
+are closed. If you call `fclose()` on the `FILE*` returned by `tmpfile()`,
+the file will be deleted. If you forget to call `fclose()`, the kernel's
+process termination cleanup will close all handles the process has open, and
+the file will be deleted.
 
 However, if the process exits without being terminated (e.g., the system
 crashes or it is a session 0 process during shutdown), the NT "file object"
-with `FILE_FLAG_DELETE_ON_CLOSE` set will not be closed, and the file will
-not be deleted.
+that has `FILE_FLAG_DELETE_ON_CLOSE` set will not be closed, and the file
+will not be deleted.
 
 When a file is POSIX deleted, it is moved to the special NTFS directory
 `$Extend\$Deleted` and is no longer present in the normally visible file
@@ -39,7 +39,7 @@ FILE* objects, this entire class of problem goes away.
 
 ## Windows shutdown
 
-During shutdown, process in session 0 are informed of shutdown, but **they
+During shutdown, processes in session 0 are informed of shutdown, but **they
 _are not_ terminated**. Thus files marked with `FILE_FLAG_DELETE_ON_CLOSE`
 will not be automatically deleted by the OS unless the session 0 process
 intentionally terminates itself. Most session 0 processes do not terminate
@@ -107,13 +107,13 @@ installed. I recommend using the Ninja generator.
    was created. Note down this path.
 1. Crash your system.
 1. After a reboot, check whether the temp file exists at its original path.
-   It should not exit.
+   It should not exist.
 
 To see what happens when POSIX deletion is not used, run the example again
 with the argument "skip":
 
 ```powershell
-.\build\msvc-tmpfile-posix-delete.exe
+.\build\msvc-tmpfile-posix-delete.exe skip
 ```
 
 When POSIX deletion _is not done_, the temp file will still exist after the
